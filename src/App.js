@@ -5,7 +5,7 @@ import CartPage from './CartPage'; // Make sure you have this component
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/order-booking">
       <Routes>
         <Route path="/" element={<OrderForm />} />
         <Route path="/cart" element={<CartPage />} />
