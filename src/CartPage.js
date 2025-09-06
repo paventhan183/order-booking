@@ -87,11 +87,10 @@ ${items
 >
           <thead>
             <tr style={{ background: '#f7fafd' }}>
-              <th style={{ border: '1px solid #ccc', padding: '8px' }}>#</th>
+
               <th style={{ border: '1px solid #ccc', padding: '8px' }}>Item</th>
               <th style={{ border: '1px solid #ccc', padding: '8px' }}>Item (Tamil)</th>
-              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Unit</th>
-              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Quantity</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Unit/Quantity</th>
               <th style={{ border: '1px solid #ccc', padding: '8px' }}>Price</th>
             </tr>
           </thead>
@@ -103,13 +102,13 @@ ${items
               const totalPrice = unitPrice * qty;
               return (
                 <tr key={item.id}>
-                  <td style={{ border: '1px solid #ccc', padding: '8px' }}>{idx + 1}</td>
-                  <td style={{ border: '1px solid #ccc', padding: '8px' }}>{item.item}</td>
+
+                  <td style={{ border: '1px solid #ccc', padding: '8px' }}> {idx + 1}.{item.item}</td>
                   <td style={{ border: '1px solid #ccc', padding: '8px' }}>
                     {itemObj && itemObj.tamil ? itemObj.tamil : ''}
                   </td>
-                  <td style={{ border: '1px solid #ccc', padding: '8px' }}>{item.unit}</td>
-                  <td style={{ border: '1px solid #ccc', padding: '8px' }}>{item.quantity}</td>
+                  <td style={{ border: '1px solid #ccc', padding: '8px' }}>{item.quantity} {item.unit}</td>
+                
                   <td style={{ border: '1px solid #ccc', padding: '8px', color: '#0078d4', fontWeight: 500 }}>
                     {unitPrice && qty ? totalPrice.toFixed(2) : '-'}
                   </td>
@@ -136,9 +135,9 @@ ${items
           }, 0).toFixed(2)}
         </div>
 
-        <button type="button" onClick={handleSubmit} style={{ marginRight: '10px' }}>
+        {/* <button type="button" onClick={handleSubmit} style={{ marginRight: '10px' }}>
           Submit Order
-        </button>
+        </button> */}
         <button type="button" onClick={handleSendWhatsApp} style={{ marginRight: '10px' }}>
           Send via WhatsApp
         </button>

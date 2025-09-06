@@ -202,7 +202,7 @@ const OrderForm = () => {
 
   return (
     <div style={{
-      maxWidth: '600px',
+      maxWidth: '700px',
       margin: '40px auto',
       background: '#fff',
       borderRadius: '10px',
@@ -241,31 +241,9 @@ const OrderForm = () => {
         /><br /><br />
 
         <h3>Items</h3>
-        {/* Header row */}
-        <div
-          style={{
-            display: 'flex',
-            fontWeight: 600,
-            marginBottom: 8,
-            background: '#f7fafd',
-            borderRadius: 6,
-            padding: '8px 0',
-            border: '1px solid #ccc',
-            gap: 8
-          }}
-        >
-          <div style={{ flex: 2, minWidth: 120, paddingLeft: 8 }}>Item</div>
-          <div style={{ flex: 1, minWidth: 100 }}>Item (Tamil)</div>
-          <div style={{ flex: 1, minWidth: 80 }}>Unit</div>
-          <div style={{ flex: 1, minWidth: 80 }}>Quantity</div>
-          <div style={{ flex: 1, minWidth: 80 }}>Price</div>
-          <div style={{ width: 80 }}></div>
-        </div>
-        {/* Items rows */}
         {items.map((item, index) => {
           const selectedItem = itemsData.find((i) => i.name === item.item);
           const units = selectedItem ? selectedItem.units : [];
-          // Get price for selected unit
           const unitPrice =
             selectedItem && item.unit
               ? selectedItem.prices?.[item.unit] ?? 0
@@ -276,26 +254,31 @@ const OrderForm = () => {
           return (
             <div
               key={item.id}
+              className="order-item-row"
               style={{
-                display: 'flex',
-                alignItems: 'center',
                 background: '#f7fafd',
-                borderRadius: 6,
-                marginBottom: 8,
-                border: '1px solid #ccc',
-                gap: 8,
-                padding: '8px 0',
-                flexWrap: 'wrap'
+                borderRadius: 10,
+                marginBottom: 18,
+                border: '1px solid #e0e0e0',
+                padding: '16px 12px',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 10
               }}
             >
+              {/* Item heading */}
+              <div style={{ fontWeight: 600, color: '#0078d4', minWidth: 60, marginBottom: 4 }}>
+                Item {index + 1}
+              </div>
               {/* Item input */}
-              <div style={{ flex: 2, minWidth: 120, paddingLeft: 8 }}>
+              <div style={{ flex: 2, minWidth: 120 }}>
                 <div style={{ position: 'relative' }}>
                   <input
                     type="text"
                     value={item.item}
                     onChange={(e) => handleItemChange(item.id, 'item', e.target.value)}
-                    placeholder="Search or type item"
+                    placeholder="Item Name"
                     autoComplete="off"
                     style={{ width: '100%' }}
                     onFocus={() => handleItemChange(item.id, 'showDropdown', true)}
@@ -334,7 +317,6 @@ const OrderForm = () => {
                   )}
                 </div>
               </div>
-
               {/* Tamil column */}
               <div
                 style={{
@@ -351,7 +333,6 @@ const OrderForm = () => {
               >
                 {selectedItem && selectedItem.tamil ? selectedItem.tamil : ''}
               </div>
-
               {/* Unit select */}
               <div style={{ flex: 1, minWidth: 80 }}>
                 <select
@@ -362,7 +343,7 @@ const OrderForm = () => {
                   style={{ width: '100%' }}
                   autoComplete="off"
                 >
-                  <option value="">-- Select Unit --</option>
+                  <option value="">Select Unit</option>
                   {units.map((u, idx) => (
                     <option key={idx} value={u}>
                       {u}
@@ -370,7 +351,6 @@ const OrderForm = () => {
                   ))}
                 </select>
               </div>
-
               {/* Quantity input */}
               <div style={{ flex: 1, minWidth: 80 }}>
                 <input
@@ -381,14 +361,13 @@ const OrderForm = () => {
                   }
                   style={{ width: '100%' }}
                   autoComplete="off"
+                  placeholder="Qty"
                 />
               </div>
-
               {/* Price column */}
               <div style={{ flex: 1, minWidth: 80, textAlign: 'center', color: '#0078d4', fontWeight: 500 }}>
                 {unitPrice && qty ? totalPrice.toFixed(2) : '-'}
               </div>
-
               {/* Remove button */}
               <div style={{ width: 80, textAlign: 'center' }}>
                 {items.length > 1 && (
@@ -414,11 +393,28 @@ const OrderForm = () => {
         <style>
         {`
         @media (max-width: 700px) {
-          .order-item-row,
+          .order-item-row {
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 0 !important;
+            padding: 12px 4px !important;
+          }
           .order-item-row > div {
-            flex-direction: column !important;
-            align-items: stretch !important;
+            flex: 1 1 48% !important;
             min-width: 0 !important;
+            width: 48% !important;
+            margin-bottom: 8px;
+          }
+          .order-item-row > div:first-child {
+            flex-basis: 100% !important;
+            min-width: 80px !important;
+            margin-bottom: 4px;
+          }
+        }
+        @media (max-width: 480px) {
+          .order-item-row > div {
+            flex-basis: 100% !important;
+            min-width: 80px !important;
             width: 100% !important;
           }
         }
