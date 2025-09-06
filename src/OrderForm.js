@@ -221,6 +221,12 @@ const OrderForm = () => {
   };
 
   const addItem = () => {
+    const lastItem = items[items.length - 1];
+    if (lastItem && lastItem.item.trim() === '') {
+      alert('Please enter the item name for the current row before adding a new one.');
+      return;
+    }
+
     setItems([...items, { id: Date.now(), item: '', unit: '', quantity: '' }]);
   };
 
@@ -239,6 +245,12 @@ const OrderForm = () => {
   const handleAddCart = () => {
     if (!validateForm()) {
       alert('Please fill all required fields correctly.');
+      return;
+    }
+
+    // Validate that all items have a name
+    if (items.some(item => item.item.trim() === '')) {
+      alert('Please make sure all items have a name before adding to cart.');
       return;
     }
 
