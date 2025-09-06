@@ -46,16 +46,6 @@ h2, h3 {
   color: #0078d4;
   margin-bottom: 10px;
 }
-.order-item-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 10px;
-  background: #f7fafd;
-  border-radius: 6px;
-}
 /* Responsive table styles */
 .responsive-table {
   width: 100%;
@@ -108,6 +98,79 @@ h2, h3 {
   }
   .responsive-table td:last-child {
     border-bottom: none;
+  }
+}
+
+/* New Order Form Item Styles */
+.order-form-grid {
+  font-family: 'Segoe UI', 'Noto Sans Tamil', sans-serif;
+}
+.order-form-grid h3 {
+  padding-left: 8px;
+  margin-top: 0;
+}
+.order-form-header, .order-item-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.order-form-header {
+  font-weight: 600;
+  padding: 8px;
+  background: #f0f0f0;
+  border-radius: 4px 4px 0 0;
+  border-bottom: 2px solid #ddd;
+}
+.order-item-row {
+  padding: 12px 8px;
+  border-bottom: 1px solid #eee;
+}
+.order-item-row:nth-child(even) {
+    background: #f7fafd;
+}
+.order-item-col .tamil-name-display {
+  font-family: 'Noto Sans Tamil', 'Latha', 'Arial Unicode MS', Arial, sans-serif;
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+.order-item-col .price-display {
+  color: #0078d4;
+  font-weight: 500;
+}
+
+@media (max-width: 800px) {
+  .order-form-header {
+    display: none;
+  }
+  .order-item-row {
+    flex-direction: column;
+    align-items: stretch;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #f9f9f9;
+  }
+  .order-form-grid h3 {
+    padding-left: 12px;
+  }
+  .order-item-col {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    text-align: left !important;
+  }
+  .order-item-col::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #0078d4;
+    width: 90px;
+    flex-shrink: 0;
   }
 }
 `;
@@ -202,7 +265,7 @@ const OrderForm = () => {
 
   return (
     <div style={{
-      maxWidth: '700px',
+      maxWidth: '900px',
       margin: '40px auto',
       background: '#fff',
       borderRadius: '10px',
@@ -240,11 +303,21 @@ const OrderForm = () => {
           autoComplete="off" // disable browser suggestion
         /><br /><br />
 
-        <h3>Items</h3>
-        {items.map((item, index) => {
+        <div className="order-form-grid">
+          <h3>Items</h3>
+          {/* Header for desktop */}
+          <div className="order-form-header">
+            <div style={{ flex: 3, minWidth: 150 }}>Item</div>
+            <div style={{ flex: 2, minWidth: 100 }}>Tamil</div>
+            <div style={{ flex: 1, minWidth: 90 }}>Unit</div>
+            <div style={{ flex: 1, minWidth: 70 }}>Qty</div>
+            <div style={{ flex: 1, minWidth: 80 }}>Price</div>
+            <div style={{ width: 90, textAlign: 'center' }}>Action</div>
+          </div>
+          {items.map((item, index) => {
           const selectedItem = itemsData.find((i) => i.name === item.item);
           const units = selectedItem ? selectedItem.units : [];
-          const unitPrice =
+          const unitPrice = 
             selectedItem && item.unit
               ? selectedItem.prices?.[item.unit] ?? 0
               : 0;
@@ -252,27 +325,9 @@ const OrderForm = () => {
           const totalPrice = unitPrice * qty;
 
           return (
-            <div
-              key={item.id}
-              className="order-item-row"
-              style={{
-                background: '#f7fafd',
-                borderRadius: 10,
-                marginBottom: 18,
-                border: '1px solid #e0e0e0',
-                padding: '16px 12px',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 10
-              }}
-            >
-              {/* Item heading */}
-              <div style={{ fontWeight: 600, color: '#0078d4', minWidth: 60, marginBottom: 4 }}>
-                Item {index + 1}
-              </div>
+            <div key={item.id} className="order-item-row">
               {/* Item input */}
-              <div style={{ flex: 2, minWidth: 120 }}>
+              <div className="order-item-col item-name-col" data-label="Item" style={{ flex: 3, minWidth: 150 }}>
                 <div style={{ position: 'relative' }}>
                   <input
                     type="text"
@@ -318,28 +373,14 @@ const OrderForm = () => {
                 </div>
               </div>
               {/* Tamil column */}
-              <div
-                style={{
-                  flex: 2,
-                  minWidth: 100,
-                  textAlign: 'center',
-                  fontFamily: `'Noto Sans Tamil', 'Latha', 'Arial Unicode MS', Arial, sans-serif`,
-                  fontSize: 18,
-                  color: '#222',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
-                }}
-              >
-                {selectedItem && selectedItem.tamil ? selectedItem.tamil : ''}
+              <div className="order-item-col tamil-name-col" data-label="Tamil" style={{ flex: 2, minWidth: 100}}>
+                <span className="tamil-name-display">{selectedItem?.tamil || ''}</span>
               </div>
               {/* Unit select */}
-              <div style={{ flex: 1, minWidth: 80 }}>
+              <div className="order-item-col unit-col" data-label="Unit" style={{ flex: 1, minWidth: 90 }}>
                 <select
                   value={item.unit}
-                  onChange={(e) =>
-                    handleItemChange(item.id, 'unit', e.target.value)
-                  }
+                  onChange={(e) => handleItemChange(item.id, 'unit', e.target.value)}
                   style={{ width: '100%' }}
                   autoComplete="off"
                 >
@@ -352,24 +393,22 @@ const OrderForm = () => {
                 </select>
               </div>
               {/* Quantity input */}
-              <div style={{ flex: 1, minWidth: 80 }}>
+              <div className="order-item-col qty-col" data-label="Qty" style={{ flex: 1, minWidth: 70 }}>
                 <input
                   type="number"
                   value={item.quantity}
-                  onChange={(e) =>
-                    handleItemChange(item.id, 'quantity', e.target.value)
-                  }
+                  onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value)}
                   style={{ width: '100%' }}
                   autoComplete="off"
                   placeholder="Qty"
                 />
               </div>
               {/* Price column */}
-              <div style={{ flex: 1, minWidth: 80, textAlign: 'center', color: '#0078d4', fontWeight: 500 }}>
-                {unitPrice && qty ? totalPrice.toFixed(2) : '-'}
+              <div className="order-item-col price-col" data-label="Price" style={{ flex: 1, minWidth: 80, justifyContent: 'flex-end' }}>
+                <span className="price-display">{unitPrice && qty ? totalPrice.toFixed(2) : '-'}</span>
               </div>
               {/* Remove button */}
-              <div style={{ width: 80, textAlign: 'center' }}>
+              <div className="order-item-col action-col" data-label="Action" style={{ width: 90, textAlign: 'center' }}>
                 {items.length > 1 && (
                   <button type="button" onClick={() => removeItem(item.id)} style={{ height: '40px', marginTop: '0' }}>
                     Remove
@@ -379,6 +418,7 @@ const OrderForm = () => {
             </div>
           );
         })}
+        </div>
 
         <button type="button" onClick={addItem}>Add Item</button><br /><br />
 
@@ -388,38 +428,6 @@ const OrderForm = () => {
         <button type="button" onClick={handleReset} style={{ marginLeft: '10px', background: '#888' }}>
           Reset
         </button>
-
-        {/* Responsive styles for mobile */}
-        <style>
-        {`
-        @media (max-width: 80%) {
-          .order-item-row {
-            flex-direction: row !important;
-            flex-wrap: wrap !important;
-            gap: 5px !important;
-            padding: 12px 4px !important;
-          }
-          .order-item-row > div {
-            flex: 1 1 48% !important;
-            min-width: 0 !important;
-            width: 48% !important;
-            margin-bottom: 8px;
-          }
-          .order-item-row > div:first-child {
-            flex-basis: 100% !important;
-            min-width: 80px !important;
-            margin-bottom: 4px;
-          }
-        }
-        @media (max-width: 480px) {
-          .order-item-row > div {
-            flex-basis: 100% !important;
-            min-width: 80px !important;
-            width: 100% !important;
-          }
-        }
-        `}
-        </style>
       </div>
     </div>
   );

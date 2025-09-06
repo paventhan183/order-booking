@@ -77,46 +77,36 @@ ${items
         <strong>Address:</strong> {formData.address}<br /><br />
 
         <h3>Items</h3>
-        <table
-  style={{
-    width: '100%',
-    borderCollapse: 'collapse',
-    marginBottom: '20px',
-    fontFamily: `'Segoe UI', 'Noto Sans Tamil', 'Latha', 'Arial Unicode MS', Arial, sans-serif`
-  }}
->
-          <thead>
-            <tr style={{ background: '#f7fafd' }}>
+        <div className="cart-items-list">
+          {/* Header for desktop */}
+          <div className="cart-header">
+            <div className="cart-col" style={{ flex: 3 }}>Item</div>
+            <div className="cart-col" style={{ flex: 2, textAlign: 'center' }}>Unit/Quantity</div>
+            <div className="cart-col" style={{ flex: 1, textAlign: 'right' }}>Price</div>
+          </div>
 
-              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Item</th>
-              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Item (Tamil)</th>
-              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Unit/Quantity</th>
-              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item, idx) => {
-              const itemObj = itemsData.find(i => i.name === item.item);
-              const unitPrice = itemObj && item.unit ? itemObj.prices?.[item.unit] ?? 0 : 0;
-              const qty = Number(item.quantity) || 0;
-              const totalPrice = unitPrice * qty;
-              return (
-                <tr key={item.id}>
-
-                  <td style={{ border: '1px solid #ccc', padding: '8px' }}> {idx + 1}.{item.item}</td>
-                  <td style={{ border: '1px solid #ccc', padding: '8px' }}>
-                    {itemObj && itemObj.tamil ? itemObj.tamil : ''}
-                  </td>
-                  <td style={{ border: '1px solid #ccc', padding: '8px' }}>{item.quantity} {item.unit}</td>
-                
-                  <td style={{ border: '1px solid #ccc', padding: '8px', color: '#0078d4', fontWeight: 500 }}>
-                    {unitPrice && qty ? totalPrice.toFixed(2) : '-'}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+          {/* Item Rows */}
+          {items.map((item, idx) => {
+            const itemObj = itemsData.find(i => i.name === item.item);
+            const unitPrice = itemObj && item.unit ? itemObj.prices?.[item.unit] ?? 0 : 0;
+            const qty = Number(item.quantity) || 0;
+            const totalPrice = unitPrice * qty;
+            return (
+              <div className="cart-item" key={item.id}>
+                <div className="cart-col" data-label="Item" style={{ flex: 3 }}>
+                  <span className="item-name">{idx + 1}. {item.item}</span>
+                  {itemObj?.tamil && <span className="item-tamil"> ({itemObj.tamil})</span>}
+                </div>
+                <div className="cart-col" data-label="Unit/Quantity" style={{ flex: 2, textAlign: 'center' }}>
+                  {item.quantity} {item.unit}
+                </div>
+                <div className="cart-col" data-label="Price" style={{ flex: 1, textAlign: 'right' }}>
+                  <span className="item-price">{totalPrice > 0 ? `₹${totalPrice.toFixed(2)}` : '-'}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
         {/* Total row */}
         <div style={{
@@ -135,15 +125,64 @@ ${items
           }, 0).toFixed(2)}
         </div>
 
-        {/* <button type="button" onClick={handleSubmit} style={{ marginRight: '10px' }}>
-          Submit Order
-        </button> */}
         <button type="button" onClick={handleSendWhatsApp} style={{ marginRight: '10px' }}>
           Send via WhatsApp
         </button>
         <button type="button" onClick={handleChangeOrder}>
           Change Order
         </button>
+        <style>{`
+          .cart-items-list {
+            font-family: 'Segoe UI', 'Noto Sans Tamil', sans-serif;
+            margin-bottom: 20px;
+          }
+          .cart-header, .cart-item {
+            display: flex;
+            padding: 12px 8px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+            
+          }
+          .cart-header {
+            background: #f7fafd;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+          }
+          .item-name { font-weight: 500; }
+          .item-tamil { margin-left: 5px; color: #555; }
+          .item-price { font-weight: 500; color: #0078d4; }
+
+          @media (max-width: 600px) {
+            .cart-header {
+              display: none;
+            }
+            .cart-item {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 8px;
+              margin-bottom: 12px;
+              border-radius: 6px;
+              border: 1px solid #e0e0e0;
+              background: #f9f9f9;
+              padding: 12px;
+            }
+            .cart-item > .cart-col {
+              display: flex;
+              width: 100%;
+              text-align: left !important;
+              flex-basis: auto;
+              flex-grow: 1;
+              gap: 10px;
+            }
+            .cart-item > .cart-col::before {
+              content: attr(data-label);
+              font-weight: bold;
+              color: #0078d4;
+              width: 100px;
+              flex-shrink: 0;
+            }
+          }
+        `}</style>
       </div>
     </div>
   );
