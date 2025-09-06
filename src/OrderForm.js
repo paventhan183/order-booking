@@ -320,7 +320,7 @@ const OrderForm = () => {
               {/* Tamil column */}
               <div
                 style={{
-                  flex: 1,
+                  flex: 2,
                   minWidth: 100,
                   textAlign: 'center',
                   fontFamily: `'Noto Sans Tamil', 'Latha', 'Arial Unicode MS', Arial, sans-serif`,
@@ -392,11 +392,11 @@ const OrderForm = () => {
         {/* Responsive styles for mobile */}
         <style>
         {`
-        @media (max-width: 700px) {
+        @media (max-width: 80%) {
           .order-item-row {
             flex-direction: row !important;
             flex-wrap: wrap !important;
-            gap: 0 !important;
+            gap: 5px !important;
             padding: 12px 4px !important;
           }
           .order-item-row > div {
